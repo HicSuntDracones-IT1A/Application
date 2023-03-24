@@ -77,26 +77,26 @@ namespace SomerenUI
         {
             // clear the listview before filling it
             ListViewMain.Clear();
+            ListViewMain.BeginUpdate();
             
-            ListViewMain.Columns.Add("Number");
+            ListViewMain.Columns.Add("Room Number");
             ListViewMain.Columns.Add("Type");
             ListViewMain.Columns.Add("Capacity");
-            ListViewMain.Columns.Add("room_number");
+            // ListViewMain.Columns.Add("room_number");
 
             foreach (Room room in rooms)
             {
-                ListViewItem li = new ListViewItem(room.Id.ToString());
+                ListViewItem li = new ListViewItem(room.Number.ToString());
                 
                 li.SubItems.Add(room.Type.ToString());
                 li.SubItems.Add(room.Capacity.ToString());
-                li.SubItems.Add(room.Number.ToString());
 
-                li.Tag = rooms;   // link room object to listview item.
+                li.Tag = rooms; // link room object to listview item.
                 ListViewMain.Items.Add(li);
             }
             ListViewMain.Columns[0].Width = 150;
             ListViewMain.Columns[1].Width = 150;
-            ListViewMain.View = View.Details;
+            ListViewMain.EndUpdate();
         }
 
         private void ResetPanel(string title = "") {
@@ -107,16 +107,6 @@ namespace SomerenUI
 
         private async void ShowStudentsPanel()
         {
-
-            /*
-                List<Room> rooms = GetRooms();
-
-                foreach (Room room in rooms)
-                {
-                    MessageBox.Show(room.ToString());
-                }
-            */
-
             try
             {
                 ResetPanel();
@@ -226,9 +216,10 @@ namespace SomerenUI
 
         }
 
-        }
-            ShowRoomsPanel();
-        {
+ 
         private void roomsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowRoomsPanel();
+        }
     }
 }

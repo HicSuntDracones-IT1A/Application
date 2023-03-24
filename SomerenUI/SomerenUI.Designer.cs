@@ -165,7 +165,6 @@ namespace SomerenUI
             this.ListViewMain.TabIndex = 1;
             this.ListViewMain.UseCompatibleStateImageBehavior = false;
             this.ListViewMain.View = System.Windows.Forms.View.Details;
-            this.ListViewMain.SelectedIndexChanged += new System.EventHandler(this.ListViewMain_SelectedIndexChanged);
             // 
             // PanelTitle
             // 
