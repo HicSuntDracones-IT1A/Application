@@ -25,7 +25,7 @@ namespace SomerenUI
             return await Task.Factory.StartNew(() =>
             {
                 return targetFunction();
-            });
+            }); 
         }
 
         private void ShowDashboardPanel()
@@ -53,6 +53,50 @@ namespace SomerenUI
                 MessageBox.Show("Something went wrong while loading the teachers: " + e.Message);
             }
 
+        }
+
+        private async void ShowRoomsPanel()
+        {
+            try
+            {
+                ResetPanel();
+                List<Room> rooms = await ProcessList(GetRooms);
+                ResetPanel(title: "Rooms");
+               
+
+                DisplayRooms(rooms);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Something went wrong while loading the rooms: " + e.Message);
+            }
+
+        }
+
+        private void DisplayRooms(List<Room> rooms)
+        {
+            // clear the listview before filling it
+            ListViewMain.Clear();
+            
+            ListViewMain.Columns.Add("Number");
+            ListViewMain.Columns.Add("Type");
+            ListViewMain.Columns.Add("Capacity");
+            ListViewMain.Columns.Add("room_number");
+
+            foreach (Room room in rooms)
+            {
+                ListViewItem li = new ListViewItem(room.Id.ToString());
+                
+                li.SubItems.Add(room.Type.ToString());
+                li.SubItems.Add(room.Capacity.ToString());
+                li.SubItems.Add(room.Number.ToString());
+
+                li.Tag = rooms;   // link room object to listview item.
+                ListViewMain.Items.Add(li);
+            }
+            ListViewMain.Columns[0].Width = 150;
+            ListViewMain.Columns[1].Width = 150;
+            ListViewMain.View = View.Details;
         }
 
         private void ResetPanel(string title = "") {
@@ -182,9 +226,9 @@ namespace SomerenUI
 
         }
 
-        private void ListViewMain_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
+            ShowRoomsPanel();
+        {
+        private void roomsToolStripMenuItem_Click(object sender, EventArgs e)
     }
 }
