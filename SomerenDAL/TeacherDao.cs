@@ -28,9 +28,10 @@ namespace SomerenDAL
 
                 Teacher teacher = new Teacher()
                 {
-                    Number = (int)dr["id"],
+                    Id = current_teacher_id,
+                    Number = (int)dr["teacher_number"],
                     Name = dt_current_teacher["first_name"].ToString() + " " +
-                            dt_current_teacher["last_name"].ToString()
+                            dt_current_teacher["last_name"].ToString(),
                 };
                 teachers.Add(teacher);
             }
