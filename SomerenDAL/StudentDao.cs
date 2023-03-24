@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Data;
 using SomerenModel;
+using System;
 
 namespace SomerenDAL
 {
@@ -28,10 +29,12 @@ namespace SomerenDAL
 
                 Student student = new Student()
                 {
-                    Number = (int)dr["id"],
+                    Id = current_student_id,
+                    Number = (int)dr["student_id"],
                     Name = dt_current_student["first_name"].ToString() + " " +
-                            dt_current_student["last_name"].ToString()
-                };
+                            dt_current_student["last_name"].ToString(),
+                    BirthDate = DateTime.Parse(dr["dob"].ToString())
+            };
                 students.Add(student);
             }
             return students;
