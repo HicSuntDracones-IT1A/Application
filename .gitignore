@@ -396,3 +396,13 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+*.dll
+
+SomerenDAL/bin/Debug/net6.0/
+
+*.cache
+
+*.editorconfig
+
+SomerenUI/obj/Debug/net6.0-windows/

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.VisualBasic.Logging;
 using System.Diagnostics;
+using System.CodeDom;
 
 namespace SomerenUI
 {
@@ -24,7 +25,7 @@ namespace SomerenUI
             return await Task.Factory.StartNew(() =>
             {
                 return targetFunction();
-            });
+            }); 
         }
 
         private void ShowDashboardPanel()
@@ -54,6 +55,50 @@ namespace SomerenUI
 
         }
 
+        private async void ShowRoomsPanel()
+        {
+            try
+            {
+                ResetPanel();
+                List<Room> rooms = await ProcessList(GetRooms);
+                ResetPanel(title: "Rooms");
+               
+
+                DisplayRooms(rooms);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Something went wrong while loading the rooms: " + e.Message);
+            }
+
+        }
+
+        private void DisplayRooms(List<Room> rooms)
+        {
+            // clear the listview before filling it
+            ListViewMain.Clear();
+            
+            ListViewMain.Columns.Add("Number");
+            ListViewMain.Columns.Add("Type");
+            ListViewMain.Columns.Add("Capacity");
+            ListViewMain.Columns.Add("room_number");
+
+            foreach (Room room in rooms)
+            {
+                ListViewItem li = new ListViewItem(room.Id.ToString());
+                
+                li.SubItems.Add(room.Type.ToString());
+                li.SubItems.Add(room.Capacity.ToString());
+                li.SubItems.Add(room.Number.ToString());
+
+                li.Tag = rooms;   // link room object to listview item.
+                ListViewMain.Items.Add(li);
+            }
+            ListViewMain.Columns[0].Width = 150;
+            ListViewMain.Columns[1].Width = 150;
+            ListViewMain.View = View.Details;
+        }
+
         private void ResetPanel(string title = "") {
             PanelMain.Visible = true;
             PanelTitle.Text = title;
@@ -64,13 +109,13 @@ namespace SomerenUI
         {
 
             /*
-            List<Room> rooms = GetRooms();
+                List<Room> rooms = GetRooms();
 
-            foreach (Room room in rooms)
-            {
-                MessageBox.Show(room.ToString());
-            }
-             */
+                foreach (Room room in rooms)
+                {
+                    MessageBox.Show(room.ToString());
+                }
+            */
 
             try
             {
@@ -111,26 +156,49 @@ namespace SomerenUI
         {
             // clear the listview before filling it
             ListViewMain.Clear();
+            ListViewMain.BeginUpdate();
+
+            ListViewMain.Columns.Add("ID");
+            ListViewMain.Columns.Add("Number");
+            ListViewMain.Columns.Add("Name");
+            ListViewMain.Columns.Add("BirthDate");
 
             foreach (Student student in students)
             {
-                ListViewItem li = new ListViewItem(student.Name);
-                li.Tag = student;   // link student object to listview item
+                ListViewItem li = new ListViewItem(student.Id.ToString());
+                li.Tag = student;
+
+                li.SubItems.Add(student.Number.ToString());
+                li.SubItems.Add(student.Name);
+                li.SubItems.Add(student.BirthDate.ToString());
+
                 ListViewMain.Items.Add(li);
             }
+            ListViewMain.EndUpdate();
         }
+
 
         private void DisplayTeachers(List<Human> teachers)
         {
             // clear the listview before filling it
             ListViewMain.Clear();
+            ListViewMain.BeginUpdate();
+
+            ListViewMain.Columns.Add("ID");
+            ListViewMain.Columns.Add("Number");
+            ListViewMain.Columns.Add("Name");
 
             foreach (Teacher teacher in teachers)
             {
-                ListViewItem li = new ListViewItem(teacher.Name);
-                li.Tag = teacher;   // link student object to listview item
+                ListViewItem li = new ListViewItem(teacher.Id.ToString());
+                li.Tag = teacher;
+
+                li.SubItems.Add(teacher.Number.ToString());
+                li.SubItems.Add(teacher.Name);
+
                 ListViewMain.Items.Add(li);
             }
+            ListViewMain.EndUpdate();
         }
 
         private void dashboardToolStripMenuItem1_Click(object sender, System.EventArgs e)
@@ -158,6 +226,9 @@ namespace SomerenUI
 
         }
 
-        
+        }
+            ShowRoomsPanel();
+        {
+        private void roomsToolStripMenuItem_Click(object sender, EventArgs e)
     }
 }
