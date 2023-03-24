@@ -10,7 +10,7 @@ namespace SomerenDAL
     {
         public List<Student> GetAllStudents()
         {
-            string query = "SELECT * FROM [student]";
+            string query = "SELECT * FROM [student] JOIN [human] ON student.id = human.id";
             SqlParameter[] sqlParameters = new SqlParameter[0];
             return ReadTables(ExecuteSelectQuery(query, sqlParameters));
         }
@@ -23,16 +23,12 @@ namespace SomerenDAL
             {
                 current_student_id = (int)dr["id"];
 
-                string query = $"SELECT * FROM [human] WHERE id={current_student_id}";
-                SqlParameter[] sqlParameters = new SqlParameter[0];
-                DataRow dt_current_student = ExecuteSelectQuery(query, sqlParameters).Rows[0];
-
                 Student student = new Student()
                 {
                     Id = current_student_id,
                     Number = (int)dr["student_id"],
-                    Name = dt_current_student["first_name"].ToString() + " " +
-                            dt_current_student["last_name"].ToString(),
+                    Name = dr["first_name"].ToString() + " " +
+                            dr["last_name"].ToString(),
                     BirthDate = DateTime.Parse(dr["dob"].ToString())
             };
                 students.Add(student);

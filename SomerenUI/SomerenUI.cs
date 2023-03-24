@@ -17,11 +17,18 @@ namespace SomerenUI
         public SomerenUI()
         {
             InitializeComponent();
+            registerPanel.Visible = false;
         }
 
+        private void ColumnResizing(ListView listView)
+        {
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        }
         public async Task<dynamic> ProcessList(Func<dynamic> targetFunction)
         {
             PanelTitle.Text = "Loading...";
+            ListViewMain.Visible = false;
             return await Task.Factory.StartNew(() =>
             {
                 return targetFunction();
@@ -100,7 +107,10 @@ namespace SomerenUI
         }
 
         private void ResetPanel(string title = "") {
+            ColumnResizing(ListViewMain);
             PanelMain.Visible = true;
+            registerPanel.Visible = false;
+            ListViewMain.Visible = true;
             PanelTitle.Text = title;
             ListViewMain.Clear();
         }
@@ -141,6 +151,7 @@ namespace SomerenUI
             List<Teacher> teachers = teacherService.GetTeacher();
             return teachers.Cast<Human>().ToList();
         }
+
 
         private void DisplayStudents(List<Human> students)
         {
@@ -190,6 +201,34 @@ namespace SomerenUI
             }
             ListViewMain.EndUpdate();
         }
+        
+        private async void ShowRegisterPanel()
+        {
+            PanelMain.Visible = false;
+            registerPanel.Visible = true;
+
+            // Populate students table
+            studentListView.Clear();
+            studentListView.BeginUpdate();
+            studentListView.Columns.Add("ID");
+            studentListView.Columns.Add("Number");
+            studentListView.Columns.Add("Name");
+
+            List<Human> students = await ProcessList(GetStudents);
+
+            foreach (Student student in students)
+            {
+                ListViewItem li = new ListViewItem(student.Id.ToString());
+                li.Tag = student;
+
+                li.SubItems.Add(student.Number.ToString());
+                li.SubItems.Add(student.Name);
+                li.SubItems.Add(student.BirthDate.ToString());
+
+                studentListView.Items.Add(li);
+            }
+            studentListView.EndUpdate();
+        }
 
         private void dashboardToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
@@ -220,6 +259,30 @@ namespace SomerenUI
         private void roomsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowRoomsPanel();
+        }
+
+        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowRegisterPanel();
+        }
+
+        private void checkoutButton_Click(object sender, EventArgs e)
+        {
+            // Get student
+            if (studentListView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            ListViewItem studentView = studentListView.SelectedItems[0];
+            int studentId = int.Parse(studentView.SubItems[0].Text);
+
+            // Get drink
+            // bla bla bla
+            int drinkId = 0;
+            double price = 1.2;
+
+            totalprice.Text = price.ToString();
+
         }
     }
 }
