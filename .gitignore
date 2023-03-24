@@ -406,3 +406,9 @@ SomerenDAL/bin/Debug/net6.0/
 *.editorconfig
 
 SomerenUI/obj/Debug/net6.0-windows/
+
+*.json
+
+*.props
+
+SomerenUI/bin/Debug/net6.0-windows/
